@@ -20,7 +20,8 @@ Not much to use right now, but here you go (QWERTY):
  - WASD: movement along the camera's forward-rightward plane (i.e. horizontal movement)
  - Space/Lshift or FX: move along the camera's upward axis (i.e. vertical movement)
  - EQ: rotation along the camera's forward plane (i.e. lean, kinda)
- - mouse (hold and drag LMB) or RZVC: rotate camera (i.e. look around)
+ - mouse panning (hold and drag LMB) or RZVC: rotate camera (i.e. look around)
+ - mouse scrolling: zoom
  - P: toggle pause state (initial state is paused)
 
 FPS is locked at 60, TPS at 30. If your system could do more, it won't. **If your system can't do this much, most likely your entire desktop will lag to oblivion, or potentially break due to bad coding on whosever part who coded your desktop.** You've been warned.
