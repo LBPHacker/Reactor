@@ -2,6 +2,7 @@ reactorIncdirs += [
 	include_directories('.'),
 ]
 reactorSources += files(
+	'Frequency.cpp',
 	'Movement.cpp',
 	'Scene.cpp',
 	'main.cpp',

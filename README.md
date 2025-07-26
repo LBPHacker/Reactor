@@ -24,4 +24,4 @@ Not much to use right now, but here you go (QWERTY):
  - mouse scrolling: zoom
  - P: toggle pause state (initial state is paused)
 
-FPS is locked at 60, TPS at 30. If your system could do more, it won't. **If your system can't do this much, most likely your entire desktop will lag to oblivion, or potentially break due to bad coding on whosever part who coded your desktop.** You've been warned.
+FPS is locked at your screen's preferred frequency (vsync), TPS at 30. If your system could do more, it won't. **If your system can't do this much, most likely your entire desktop will lag to oblivion, or potentially break due to bad coding on whosever part who coded your desktop.** You've been warned.

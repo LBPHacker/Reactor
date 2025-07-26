@@ -3,6 +3,7 @@
 #include "Common/Log.hpp"
 #include "Common/Defer.hpp"
 #include "Gl/Funcs.hpp"
+#include "Frequency.hpp"
 #include <utility>
 #include <iomanip>
 #include <SDL.h>
@@ -165,17 +166,17 @@ int main()
 	Gl::glDebugMessageControl(GL_DONT_CARE                   , GL_DEBUG_TYPE_ERROR, GL_DONT_CARE, 0, nullptr, GL_TRUE );
 	Gl::glDebugMessageControl(GL_DEBUG_SOURCE_SHADER_COMPILER, GL_DONT_CARE       , GL_DONT_CARE, 0, nullptr, GL_FALSE);
 	SdlAssertZero(SDL_GL_MakeCurrent(sdlWindow, glContext));
-	// SdlAssertZero(SDL_GL_SetSwapInterval(1));
+	SdlAssertZero(SDL_GL_SetSwapInterval(1));
 	Scene scene;
 	Movement movement;
 	movement.Warp({ 200, 200, 200 }, { -1, -1, -1 }, { -1, 1, -1 });
 	bool running = true;
-	auto lastFrameAt = int64_t(SDL_GetTicks64());;
-	auto nexTickAt = lastFrameAt;
-	auto nextWindowTitleAt = lastFrameAt;
-	float fps = 0;
+	auto nexTickAt = int64_t(SDL_GetTicks64());
+	auto nextFpsReportAt = nexTickAt;
 	float fov = 60.f;
 	bool paused = true;
+	Frequency fps;
+	Frequency tps;
 	while (running)
 	{
 		SDL_Event event;
@@ -243,6 +244,7 @@ int main()
 		while (!paused && nexTickAt <= now)
 		{
 			scene.Tick();
+			tps.Tick();
 			nexTickAt += tickInterval;
 			ticksDone += 1;
 			if (ticksDone >= maxTicksDone)
@@ -252,16 +254,20 @@ int main()
 				break;
 			}
 		}
-		if (nextWindowTitleAt <= now)
+		if (nextFpsReportAt <= now)
 		{
-			lrh("fps: ", std::fixed, std::setprecision(2), fps);
-			nextWindowTitleAt = now + windowTitleInterval;
+			std::ostringstream ss;
+			ss << "fps: " << std::fixed << std::setprecision(2) << fps.GetFrequency();
+			if (!paused)
+			{
+				ss << "; tps: " << std::fixed << std::setprecision(2) << tps.GetFrequency();
+			}
+			lrh(ss.str());
+			nextFpsReportAt = now + windowTitleInterval;
 		}
-		auto frameTime = std::max(INT64_C(1), now - lastFrameAt);
-		lastFrameAt = now;
-		fps += ((1000.f / frameTime) - fps) * 0.1f;
 		Gl::glViewport(0, 0, windowSize.x, windowSize.y);
 		scene.Render(movement.GetCfu(), fov, float(windowSize.x) / float(windowSize.y));
+		fps.Tick();
 		SDL_GL_SwapWindow(sdlWindow);
 	}
 	return 0;
