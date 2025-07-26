@@ -1,0 +1,3 @@
+reactorSources += files(
+	'Log.cpp',
+)
