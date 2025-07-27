@@ -117,41 +117,45 @@ bool getReaction(uint a, uint b, out uint reaction)
 	return false;
 }
 
+struct AvailableReaction
+{
+	uint reaction;
+	ivec3 d;
+};
+void checkNeighbour(inout AvailableReaction availableReactions[6], inout uint availableReactionsMax, uint self, ivec3 pos, ivec3 d)
+{
+	if (d == ivec3(0))
+	{
+		return;
+	}
+	ivec3 npos = pos + d;
+	if (!(all(greaterThanEqual(npos, ivec3(0))) &&
+	      all(lessThan        (npos, simSize ))))
+	{
+		return;
+	}
+	uint neighbour = sim.data[linear(npos)];
+	uint reaction;
+	if (getReaction(self, neighbour, reaction))
+	{
+		availableReactions[availableReactionsMax] = AvailableReaction(reaction, d);
+		availableReactionsMax += 1;
+	}
+}
+
 void main()
 {
 	uint lcg = lcgSkip(globalLcg, linear(gl_GlobalInvocationID));
 	ivec3 pos = ivec3(gl_GlobalInvocationID);
 	uint self = sim.data[linear(pos)];
-	struct AvailableReaction
-	{
-		uint reaction;
-		ivec3 d;
-	};
-	AvailableReaction availableReactions[26];
+	AvailableReaction availableReactions[6];
 	uint availableReactionsMax = 0;
-	for (int dz = -1; dz <= 1; ++dz)
-	for (int dy = -1; dy <= 1; ++dy)
-	for (int dx = -1; dx <= 1; ++dx)
-	{
-		ivec3 d = ivec3(dx, dy, dz);
-		if (d == ivec3(0))
-		{
-			continue;
-		}
-		ivec3 npos = pos + d;
-		if (!(all(greaterThanEqual(npos, ivec3(0))) &&
-		      all(lessThan        (npos, simSize ))))
-		{
-			continue;
-		}
-		uint neighbour = sim.data[linear(npos)];
-		uint reaction;
-		if (getReaction(self, neighbour, reaction))
-		{
-			availableReactions[availableReactionsMax] = AvailableReaction(reaction, d);
-			availableReactionsMax += 1;
-		}
-	}
+	checkNeighbour(availableReactions, availableReactionsMax, self, pos, ivec3(-1,  0,  0));
+	checkNeighbour(availableReactions, availableReactionsMax, self, pos, ivec3( 1,  0,  0));
+	checkNeighbour(availableReactions, availableReactionsMax, self, pos, ivec3( 0, -1,  0));
+	checkNeighbour(availableReactions, availableReactionsMax, self, pos, ivec3( 0,  1,  0));
+	checkNeighbour(availableReactions, availableReactionsMax, self, pos, ivec3( 0,  0, -1));
+	checkNeighbour(availableReactions, availableReactionsMax, self, pos, ivec3( 0,  0,  1));
 	uint ri = 0;
 	if (availableReactionsMax > 0)
 	{
