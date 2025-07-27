@@ -9,10 +9,10 @@ namespace Reactor
 	{
 		thread_local Common::LogRealmHandle lrh("movement");
 
-		constexpr float movementVelMax  = 25.f;
-		constexpr float movementAcc     = 100.f;
-		constexpr float rotationAvelMax = 0.25f;
-		constexpr float rotationAacc    = 1.0f;
+		constexpr float movementVelMax  = 250.f;
+		constexpr float movementAcc     = 1000.f;
+		constexpr float rotationAvelMax = 0.50f;
+		constexpr float rotationAacc    = 2.0f;
 		constexpr float tickInterval    = 0.01f;
 
 		constexpr auto pi = std::numbers::pi_v<float>;
