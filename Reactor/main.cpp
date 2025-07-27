@@ -8,6 +8,8 @@
 #include <iomanip>
 #include <SDL.h>
 #include <algorithm>
+#include <array>
+#include <deque>
 
 namespace
 {
@@ -16,8 +18,9 @@ namespace
 
 	thread_local LogRealmHandle lrh("main");
 
-	constexpr int64_t tickInterval = 1000 / 30;
-	constexpr int64_t maxTicksDone = 10;
+	constexpr int64_t tickInterval     = 1000 / 30;
+	constexpr int64_t maxTicksDone     = 10;
+	constexpr int64_t maxTicksInFlight = 1;
 
 	constexpr int64_t windowTitleInterval = 1000;
 
@@ -241,9 +244,22 @@ int main()
 		auto now = int64_t(SDL_GetTicks64());
 		int64_t ticksDone = 0;
 		Tick(movement);
-		while (!paused && nexTickAt <= now)
+		std::deque<GLsync> ticksInFlight;
+		while (!ticksInFlight.empty())
+		{
+			GLint status;
+			Gl::glGetSynciv(ticksInFlight.front(), GL_SYNC_STATUS, 1, nullptr, &status);
+			if (status == GL_UNSIGNALED)
+			{
+				break;
+			}
+			Gl::glDeleteSync(ticksInFlight.front());
+			ticksInFlight.pop_front();
+		}
+		while (!paused && nexTickAt <= now && int64_t(ticksInFlight.size()) < maxTicksInFlight)
 		{
 			scene.Tick();
+			ticksInFlight.push_back(Gl::glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0));
 			tps.Tick();
 			nexTickAt += tickInterval;
 			ticksDone += 1;

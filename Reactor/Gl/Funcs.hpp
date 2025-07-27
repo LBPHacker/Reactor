@@ -18,11 +18,13 @@
 	X(void, glDeleteBuffers, GLsizei n, const GLuint *buffers) \
 	X(void, glDeleteProgram, GLuint program) \
 	X(void, glDeleteShader, GLuint shader) \
+	X(void, glDeleteSync, GLsync sync) \
 	X(void, glDeleteVertexArrays, GLsizei n, const GLuint *arrays) \
 	X(void, glDispatchCompute, GLuint num_groups_x, GLuint num_groups_y, GLuint num_groups_z) \
 	X(void, glDrawArrays, GLenum mode, GLint first, GLsizei count) \
 	X(void, glEnable, GLenum cap) \
 	X(void, glEnableVertexArrayAttrib, GLuint vaobj, GLuint index) \
+	X(GLsync, glFenceSync, GLenum condition, GLbitfield flags) \
 	X(void, glFinish, void) \
 	X(void, glGenBuffers, GLsizei n, GLuint *buffers) \
 	X(GLint, glGetAttribLocation, GLuint program, const GLchar *name) \
@@ -33,6 +35,7 @@
 	X(void, glGetProgramResourceiv, GLuint program, GLenum programInterface, GLuint index, GLsizei propCount, const GLenum *props, GLsizei bufSize, GLsizei *length, GLint *params) \
 	X(void, glGetShaderInfoLog, GLuint shader, GLsizei maxLength, GLsizei *length, GLchar *infoLog) \
 	X(void, glGetShaderiv, GLuint shader, GLenum pname, GLint *params) \
+	X(void, glGetSynciv, GLsync sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *values) \
 	X(GLuint, glGetUniformBlockIndex, GLuint program, const GLchar *uniformBlockName) \
 	X(GLint, glGetUniformLocation, GLuint program, const GLchar *name) \
 	X(void, glLinkProgram, GLuint program) \

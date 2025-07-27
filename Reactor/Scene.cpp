@@ -23,9 +23,9 @@ namespace Reactor
 	{
 		thread_local Common::LogRealmHandle lrh("scene");
 
-		constexpr glm::ivec3 simSize = { 64, 128, 64 };
+		constexpr glm::ivec3 simSize = { 128, 128, 128 };
 		constexpr glm::ivec3 initBlockOrigin = { 0, 0, 0 };
-		constexpr glm::ivec3 initBlockSize = { 64, 64, 64 };
+		constexpr glm::ivec3 initBlockSize = { 8, 8, 8 };
 		constexpr uint32_t elementTypes = 16;
 
 		template<class Vec>
